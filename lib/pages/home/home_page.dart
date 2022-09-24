@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage> {
             Icons.close,
             size: 20.0,
             color: Colors.purple.shade700,
+
           ),
         ),
       ),
@@ -139,17 +140,12 @@ class _HomePageState extends State<HomePage> {
         if(num == -1){
           _input = _input.substring(0,_input.length-1);
         }
-        if(num == -2){
-          _input = '';
-        }
       });
       return;
     }
     setState(() {
       if(num == -1){
         _input = _input.substring(0,_input.length - 1);
-      }else if(num == -2){
-        _input = '';
       }else{
         _input = _input + num.toString();
       }
