@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homework3/helper.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,15 +10,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _input = '';
+  var _message = 'ทายเลข 1 ถึง 100';
 
-  Widget _buildNumberButton(int num) {
+  Widget _buildNumberButtonNumber(int num) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          setState(() {
-            _input = _input + num.toString();
-          });
+          _handleClickButtonNumber(num);
         },
         /*onTap: () {
           _handleClickButtonNumber(num);
@@ -28,31 +28,25 @@ class _HomePageState extends State<HomePage> {
           height: 35.0,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-
-            border:
-              Border.all(
-              color: Color(0xFF333333),
-              width: 0.25,
-            )
-
-          ),
-
-          child:
-            num >= 0
-            ? Text(
-              num.toString(),
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w400,
-                color: Colors.purple.shade700,
-              ),
-            )
-          : Icon(
-              Icons.backspace_outlined,
-              size: 20.0,
-              color: Colors.purple.shade700,
-            ),
+              shape: BoxShape.rectangle,
+              border: Border.all(
+                color: Color(0xFF333333),
+                width: 0.25,
+              )),
+          child: num >= 0
+              ? Text(
+                  num.toString(),
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.purple.shade700,
+                  ),
+                )
+              : Icon(
+                  Icons.backspace_outlined,
+                  size: 20.0,
+                  color: Colors.purple.shade700,
+                ),
         ),
       ),
     );
@@ -65,12 +59,40 @@ class _HomePageState extends State<HomePage> {
   /*Widget _buildIndicator(){
 
   }*/
-  void _handleClickButtonGuess(){
 
+  void _handleClickButtonGuess() {
+    if(_input.length == 0){
+      showMyDialog(context, 'ERROR', 'กรุณากรอกตัวเลข');
+    }
+    else if(_input.length <= 3){
+      setState(() {
+        _message = _input + ': น้อยเกินไป';
+        _input = '';
+      });
+    }
   }
 
-  void _handleClickButtonNumber(int num){
-
+  void _handleClickButtonNumber(int num) {
+    if(_input.length >= 3){
+      setState(() {
+        if(num == -1){
+          _input = _input.substring(0,_input.length-1);
+        }
+        if(num == -2){
+          _input = '';
+        }
+      });
+      return;
+    }
+    setState(() {
+      if(num == -1){
+        _input = _input.substring(0,_input.length - 1);
+      }else if(num == -2){
+        _input = '';
+      }else{
+        _input = _input + num.toString();
+      }
+    });
   }
 
   @override
@@ -95,8 +117,8 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                        'assets/images/guess_logo.png',
-                        width: 100.0,
+                      'assets/images/guess_logo.png',
+                      width: 100.0,
                     ),
                     Column(
                       children: [
@@ -120,7 +142,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                //SizedBox(height: 100.0),
                 Text(
                   _input,
                   style: TextStyle(
@@ -128,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Text(
-                  'ทายเลข 1 ถึง 100',
+                  _message,
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
@@ -139,42 +160,38 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                         _buildNumberButton(1),
-                         _buildNumberButton(2),
-                         _buildNumberButton(3),
+                        for (var i in [1, 2, 3]) _buildNumberButtonNumber(i)
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                         for (var i in [4, 5, 6]) _buildNumberButton(i)
+                        for (var i in [4, 5, 6]) _buildNumberButtonNumber(i)
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                         for (var i in [7, 8, 9]) _buildNumberButton(i)
+                        for (var i in [7, 8, 9]) _buildNumberButtonNumber(i)
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildNumberButton(-2),
-                        _buildNumberButton(0),
-                        _buildNumberButton(-1),
+                        for (var i in [-2, 0, -1]) _buildNumberButtonNumber(i)
                       ],
                     ),
                   ],
                 ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  _handleClickButtonGuess();
-                },
-                child: Text('Guess'),
-              ),
-            ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _handleClickButtonGuess();
+                    },
+                    child: Text('Guess'),
+                  ),
+                ),
               ],
             ),
           ),
