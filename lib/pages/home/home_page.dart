@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homework3/helper.dart';
+import 'package:homework3/my_guess_number.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,6 +12,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _input = '';
   var _message = 'ทายเลข 1 ถึง 100';
+  final _game = Game();
+  var count = 0;
 
   Widget _buildNumberButtonNumber(int num) {
     return Padding(
@@ -52,23 +55,81 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /*Widget _buildIndicatorGuess(){
+  Widget _buildNumberButtonAllClear(int num) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: () {
+          _handleClickButtonAllClear(num);
+        },
 
-  }*/
+        customBorder: RoundedRectangleBorder(),
+        child: Container(
+          width: 40.0,
+          height: 35.0,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              border: Border.all(
+                color: Color(0xFF333333),
+                width: 0.25,
+              )),
+          child: Icon(
+            Icons.close,
+            size: 20.0,
+            color: Colors.purple.shade700,
+          ),
+        ),
+      ),
+    );
+  }
 
-  /*Widget _buildIndicator(){
-
-  }*/
+  void _handleClickButtonAllClear(int num) {
+    if(_input.length >= 3){
+      setState(() {
+        if(num == -2){
+          _input = '';
+        }
+      });
+      return;
+    }
+    setState(() {
+      if(num == -2){
+        _input = '';
+      }
+    });
+  }
 
   void _handleClickButtonGuess() {
     if(_input.length == 0){
       showMyDialog(context, 'ERROR', 'กรุณากรอกตัวเลข');
     }
     else if(_input.length <= 3){
-      setState(() {
-        _message = _input + ': น้อยเกินไป';
-        _input = '';
-      });
+      var guess = int.tryParse(_input);
+      if(guess != null) {
+        var result = _game.doGuess(guess);
+        if (result == Result.tooHigh) {
+          print('Too High');
+          setState(() {
+            _message = '$guess : มากเกินไป';
+            _input = '';
+          });
+          count++;
+        } else if (result == Result.tooLow) {
+          print('Too Low');
+          setState(() {
+            _message = '$guess : น้อยเกินไป';
+            _input = '';
+          });
+          count++;
+        } else if (result == Result.correct){
+          count++;
+          print('Correct');
+          setState(() {
+            _message = '$guess : ถูกต้อง 🎉 (ทาย $count  ครั้ง)';
+          });
+        }
+      }
     }
   }
 
@@ -178,7 +239,8 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        for (var i in [-2, 0, -1]) _buildNumberButtonNumber(i)
+                        _buildNumberButtonAllClear(-2),
+                        for (var i in [0, -1]) _buildNumberButtonNumber(i)
                       ],
                     ),
                   ],
