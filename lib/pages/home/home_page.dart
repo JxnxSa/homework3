@@ -35,7 +35,9 @@ class _HomePageState extends State<HomePage> {
               border: Border.all(
                 color: Color(0xFF333333),
                 width: 0.25,
-              )),
+              ),
+              borderRadius: BorderRadius.circular(5.0),
+          ),
           child: num >= 0
               ? Text(
                   num.toString(),
@@ -73,7 +75,9 @@ class _HomePageState extends State<HomePage> {
               border: Border.all(
                 color: Color(0xFF333333),
                 width: 0.25,
-              )),
+              ),
+              borderRadius: BorderRadius.circular(5.0),
+          ),
           child: Icon(
             Icons.close,
             size: 20.0,
@@ -211,7 +215,6 @@ class _HomePageState extends State<HomePage> {
                     fontSize: 20.0,
                   ),
                 ),
-
                 Column(
                   children: [
                     Row(
